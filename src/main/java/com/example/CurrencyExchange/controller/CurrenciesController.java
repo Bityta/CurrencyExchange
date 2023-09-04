@@ -1,12 +1,10 @@
 package com.example.CurrencyExchange.controller;
 
 
-import com.example.CurrencyExchange.model.Currencies;
+import com.example.CurrencyExchange.model.Currency;
 import com.example.CurrencyExchange.service.CurrenciesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,10 +22,20 @@ public class CurrenciesController {
 
 
     @GetMapping
-    public List<Currencies> showAllCurrencies() {
-        System.out.println(currenciesService.findAll());
+    public List<Currency> showAllCurrencies() {
 
         return currenciesService.findAll();
+    }
+
+    @GetMapping("/{code}")
+    public Currency showCurrencyByCode(@PathVariable String code){
+        return currenciesService.findByCode(code);
+    }
+
+    @PostMapping
+    public void createCurrency(@RequestBody Currency currency){
+        System.out.println(currency);
+        currenciesService.save(currency);
     }
 
 

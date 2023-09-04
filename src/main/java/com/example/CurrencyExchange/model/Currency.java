@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Currencies {
+@ToString
+public class Currency {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

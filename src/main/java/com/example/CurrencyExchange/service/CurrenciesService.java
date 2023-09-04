@@ -1,6 +1,6 @@
 package com.example.CurrencyExchange.service;
 
-import com.example.CurrencyExchange.model.Currencies;
+import com.example.CurrencyExchange.model.Currency;
 import com.example.CurrencyExchange.repository.CurrenciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,16 @@ public class CurrenciesService {
     }
 
 
-    public List<Currencies> findAll(){
+    public List<Currency> findAll(){
         return this.currenciesRepository.findAll();
+    }
+
+    public Currency findByCode(String code){
+        return this.currenciesRepository.findByCode(code);
+    }
+
+    @Transactional
+    public void save(Currency currency){
+        this.currenciesRepository.save(currency);
     }
 }
