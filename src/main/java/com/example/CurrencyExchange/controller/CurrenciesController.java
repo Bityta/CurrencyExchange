@@ -1,6 +1,7 @@
 package com.example.CurrencyExchange.controller;
 
 
+import com.example.CurrencyExchange.dto.CurrencyDTO;
 import com.example.CurrencyExchange.model.Currency;
 import com.example.CurrencyExchange.service.CurrenciesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,8 @@ public class CurrenciesController {
     }
 
     @PostMapping
-    public void createCurrency(@RequestBody Currency currency){
-        System.out.println(currency);
-        currenciesService.save(currency);
+    public void createCurrency(@RequestBody CurrencyDTO currencyDTO){
+        currenciesService.save(currencyDTO.convertToCurrency());
     }
 
 
