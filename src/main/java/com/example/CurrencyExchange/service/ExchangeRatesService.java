@@ -2,29 +2,40 @@ package com.example.CurrencyExchange.service;
 
 
 import com.example.CurrencyExchange.model.ExchangeRates;
+import com.example.CurrencyExchange.repository.CurrenciesRepository;
 import com.example.CurrencyExchange.repository.ExchangeRatesRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 public class ExchangeRatesService {
 
     private final ExchangeRatesRepository exchangeRatesRepository;
+    private final CurrenciesRepository currenciesRepository;
 
-    public ExchangeRatesService(ExchangeRatesRepository exchangeRatesRepository) {
+    public ExchangeRatesService(ExchangeRatesRepository exchangeRatesRepository, CurrenciesRepository currenciesRepository) {
         this.exchangeRatesRepository = exchangeRatesRepository;
+        this.currenciesRepository = currenciesRepository;
     }
+
 
     public List<ExchangeRates> findAll() {
         return this.exchangeRatesRepository.findAll();
     }
 
-    public Optional<ExchangeRates> findById(int id) {
-        return Optional.ofNullable(this.exchangeRatesRepository.findById(id).orElse(null));
+    public ExchangeRates findByBaseCurrencyIdAndTargetCurrencyId(int b, int t){
+        return this.exchangeRatesRepository.findByBaseCurrencyIdAndTargetCurrencyId(b,t);
+    }
+
+    public ExchangeRates findByBaseCurrencyCodeAndTargetCurrencyCode(String b, String t){
+        return this.findByBaseCurrencyIdAndTargetCurrencyId(
+                this.currenciesRepository.findByCode(b).getId(),
+                this.currenciesRepository.findByCode(t).getId()
+        );
+
+
     }
 
     @Transactional

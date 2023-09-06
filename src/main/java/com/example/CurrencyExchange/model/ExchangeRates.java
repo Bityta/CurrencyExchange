@@ -1,5 +1,6 @@
 package com.example.CurrencyExchange.model;
 
+import com.example.CurrencyExchange.dto.ExchangeRatesDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,9 +18,19 @@ public class ExchangeRates {
     private int id;
 
 
-    private Currency baseCurrencyId;
+    private int baseCurrencyId;
 
-    private Currency targetCurrencyId;
+    private int targetCurrencyId;
 
     private double rate;
+
+    public ExchangeRatesDTO convertToExchangeRatesDTO(){
+
+        ExchangeRatesDTO exchangeRatesDTO = new ExchangeRatesDTO();
+        exchangeRatesDTO.setBaseCurrencyId(this.getBaseCurrencyId());
+        exchangeRatesDTO.setTargetCurrencyId(this.getTargetCurrencyId());
+        exchangeRatesDTO.setRate(this.getRate());
+
+        return exchangeRatesDTO;
+    }
 }

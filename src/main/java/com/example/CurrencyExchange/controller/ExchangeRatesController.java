@@ -2,6 +2,7 @@ package com.example.CurrencyExchange.controller;
 
 import com.example.CurrencyExchange.dto.ExchangeRatesDTO;
 import com.example.CurrencyExchange.model.ExchangeRates;
+import com.example.CurrencyExchange.service.CurrenciesService;
 import com.example.CurrencyExchange.service.ExchangeRatesService;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class ExchangeRatesController {
 
     private final ExchangeRatesService exchangeRatesService;
+    private final CurrenciesService currenciesService;
 
-    public ExchangeRatesController(ExchangeRatesService exchangeRatesService) {
+    public ExchangeRatesController(ExchangeRatesService exchangeRatesService, CurrenciesService currenciesService) {
         this.exchangeRatesService = exchangeRatesService;
+        this.currenciesService = currenciesService;
     }
 
 
@@ -27,9 +30,10 @@ public class ExchangeRatesController {
     @GetMapping("/{baseCurrencyCode} + {targetCurrencyCode} }")
     public Optional<ExchangeRates> showByBaseAndTargetCode(@PathVariable String baseCurrencyCode, @PathVariable String targetCurrencyCode) {
 
-        //как то получаем id
-        int id = 0;
-        return this.exchangeRatesService.findById(id);
+        return Optional.ofNullable(this.exchangeRatesService.findByBaseCurrencyIdAndTargetCurrencyId(
+                this.currenciesService.findByCode(baseCurrencyCode).getId(),
+                this.currenciesService.findByCode(targetCurrencyCode).getId()
+        ));
     }
 
     @PostMapping
@@ -38,11 +42,16 @@ public class ExchangeRatesController {
     }
 
     @PatchMapping("/{baseCurrencyCode} + {targetCurrencyCode} }")
-    public void updateByBaseAndTargetCode(@RequestBody ExchangeRatesDTO exchangeRatesDTO,@PathVariable String baseCurrencyCode, @PathVariable String targetCurrencyCode) {
+    public void updateByBaseAndTargetCode(@RequestBody ExchangeRatesDTO exchangeRatesDTO,
+                                          @PathVariable String baseCurrencyCode,
+                                          @PathVariable String targetCurrencyCode) {
 
-        //как то получаем индекс
 
-        this.exchangeRatesService.save(exchangeRatesDTO.convertToExchangeRates());
+
+
+        this.exchangeRatesService.save(exchangeRatesDTO.convertToExchangeRates(
+                this.exchangeRatesService.findByBaseCurrencyCodeAndTargetCurrencyCode
+                (baseCurrencyCode, targetCurrencyCode).getId()));
 
     }
 

@@ -16,7 +16,7 @@ public class CurrencyDTO {
 
     private String sign;
 
-    public Currency convertToCurrency(){
+    public Currency convertToCurrency() {
 
         Currency currency = new Currency();
         currency.setCode(this.getCode());
