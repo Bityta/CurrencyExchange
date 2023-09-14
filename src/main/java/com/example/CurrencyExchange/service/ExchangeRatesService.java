@@ -2,10 +2,11 @@ package com.example.CurrencyExchange.service;
 
 
 import com.example.CurrencyExchange.model.ExchangeRates;
-import com.example.CurrencyExchange.repository.CurrenciesRepository;
+import com.example.CurrencyExchange.model.Currency;
 import com.example.CurrencyExchange.repository.ExchangeRatesRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -13,11 +14,12 @@ import java.util.List;
 public class ExchangeRatesService {
 
     private final ExchangeRatesRepository exchangeRatesRepository;
-    private final CurrenciesRepository currenciesRepository;
 
-    public ExchangeRatesService(ExchangeRatesRepository exchangeRatesRepository, CurrenciesRepository currenciesRepository) {
+    private final CurrenciesService currenciesService;
+
+    public ExchangeRatesService(ExchangeRatesRepository exchangeRatesRepository, CurrenciesService currenciesService) {
         this.exchangeRatesRepository = exchangeRatesRepository;
-        this.currenciesRepository = currenciesRepository;
+        this.currenciesService = currenciesService;
     }
 
 
@@ -25,14 +27,23 @@ public class ExchangeRatesService {
         return this.exchangeRatesRepository.findAll();
     }
 
-    public ExchangeRates findByBaseCurrencyIdAndTargetCurrencyId(int b, int t){
-        return this.exchangeRatesRepository.findByBaseCurrencyIdAndTargetCurrencyId(b,t);
+    public ExchangeRates findByBaseCurrencyIdAndTargetCurrencyId(Currency baseCurrencyId, Currency targetCurrencyId) {
+
+        if (this.exchangeRatesRepository.findByBaseCurrencyIdAndTargetCurrencyId(baseCurrencyId, targetCurrencyId) != null) {
+            return this.exchangeRatesRepository.findByBaseCurrencyIdAndTargetCurrencyId(baseCurrencyId, targetCurrencyId);
+        }
+
+        return this.exchangeRatesRepository.findByBaseCurrencyIdAndTargetCurrencyId(targetCurrencyId, baseCurrencyId);
+
     }
 
+
     public ExchangeRates findByBaseCurrencyCodeAndTargetCurrencyCode(String b, String t){
+
+
         return this.findByBaseCurrencyIdAndTargetCurrencyId(
-                this.currenciesRepository.findByCode(b).getId(),
-                this.currenciesRepository.findByCode(t).getId()
+                this.currenciesService.findByCode(b),
+                this.currenciesService.findByCode(t)
         );
 
 
@@ -40,6 +51,16 @@ public class ExchangeRatesService {
 
     @Transactional
     public void save(ExchangeRates exchangeRates){
-        this.exchangeRatesRepository.save(exchangeRates);
+
+        this.currenciesService.save(exchangeRates.getBaseCurrencyId());
+        this.currenciesService.save(exchangeRates.getTargetCurrencyId());
+
+
+        if (exchangeRatesRepository.findByBaseCurrencyIdAndTargetCurrencyId(
+                exchangeRates.getBaseCurrencyId(), exchangeRates.getTargetCurrencyId()) == null){
+            this.exchangeRatesRepository.save(exchangeRates);
+        }
+
+
     }
 }

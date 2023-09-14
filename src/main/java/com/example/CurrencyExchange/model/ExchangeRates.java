@@ -18,17 +18,21 @@ public class ExchangeRates {
     private int id;
 
 
-    private int baseCurrencyId;
+    @ManyToOne
+    @JoinColumn(name = "base_currency_id")
+    private Currency baseCurrencyId;
 
-    private int targetCurrencyId;
+    @ManyToOne
+    @JoinColumn(name = "target_currency_id")
+    private Currency targetCurrencyId;
 
     private double rate;
 
     public ExchangeRatesDTO convertToExchangeRatesDTO(){
 
         ExchangeRatesDTO exchangeRatesDTO = new ExchangeRatesDTO();
-        exchangeRatesDTO.setBaseCurrencyId(this.getBaseCurrencyId());
-        exchangeRatesDTO.setTargetCurrencyId(this.getTargetCurrencyId());
+        exchangeRatesDTO.setBaseCurrencyId(this.getBaseCurrencyId().convertToCurrencyDTO());
+        exchangeRatesDTO.setTargetCurrencyId(this.getTargetCurrencyId().convertToCurrencyDTO());
         exchangeRatesDTO.setRate(this.getRate());
 
         return exchangeRatesDTO;

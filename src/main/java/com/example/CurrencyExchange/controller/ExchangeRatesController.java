@@ -2,7 +2,6 @@ package com.example.CurrencyExchange.controller;
 
 import com.example.CurrencyExchange.dto.ExchangeRatesDTO;
 import com.example.CurrencyExchange.model.ExchangeRates;
-import com.example.CurrencyExchange.service.CurrenciesService;
 import com.example.CurrencyExchange.service.ExchangeRatesService;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,15 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("exchangeRates")
+@RequestMapping("/exchangeRates")
 public class ExchangeRatesController {
 
     private final ExchangeRatesService exchangeRatesService;
-    private final CurrenciesService currenciesService;
 
-    public ExchangeRatesController(ExchangeRatesService exchangeRatesService, CurrenciesService currenciesService) {
+    public ExchangeRatesController(ExchangeRatesService exchangeRatesService) {
         this.exchangeRatesService = exchangeRatesService;
-        this.currenciesService = currenciesService;
     }
 
 
@@ -27,27 +24,33 @@ public class ExchangeRatesController {
         return this.exchangeRatesService.findAll();
     }
 
-    @GetMapping("/{baseCurrencyCode} + {targetCurrencyCode} }")
-    public Optional<ExchangeRates> showByBaseAndTargetCode(@PathVariable String baseCurrencyCode, @PathVariable String targetCurrencyCode) {
+    @GetMapping("/{currencyCode}")
+    public Optional<ExchangeRatesDTO> showByBaseAndTargetCode(@PathVariable String currencyCode) {
 
-        return Optional.ofNullable(this.exchangeRatesService.findByBaseCurrencyIdAndTargetCurrencyId(
-                this.currenciesService.findByCode(baseCurrencyCode).getId(),
-                this.currenciesService.findByCode(targetCurrencyCode).getId()
-        ));
+        String baseCurrencyCode = currencyCode.substring(3,6);
+        String targetCurrencyCode = currencyCode.substring(0,3);
+
+
+        return Optional.ofNullable(this.exchangeRatesService.findByBaseCurrencyCodeAndTargetCurrencyCode
+                (baseCurrencyCode, targetCurrencyCode).convertToExchangeRatesDTO());
     }
 
     @PostMapping
     public void createExchangeRates(@RequestBody ExchangeRatesDTO exchangeRatesDTO) {
+
+        //конверт убрать в сервис
         this.exchangeRatesService.save(exchangeRatesDTO.convertToExchangeRates());
     }
 
-    @PatchMapping("/{baseCurrencyCode} + {targetCurrencyCode} }")
+    @PatchMapping("/{currencyCode}")
     public void updateByBaseAndTargetCode(@RequestBody ExchangeRatesDTO exchangeRatesDTO,
-                                          @PathVariable String baseCurrencyCode,
-                                          @PathVariable String targetCurrencyCode) {
+                                          @PathVariable String currencyCode) {
 
 
+        //дто вынести в сервис
 
+        String baseCurrencyCode = currencyCode.substring(3,6);
+        String targetCurrencyCode = currencyCode.substring(0,3);
 
         this.exchangeRatesService.save(exchangeRatesDTO.convertToExchangeRates(
                 this.exchangeRatesService.findByBaseCurrencyCodeAndTargetCurrencyCode
