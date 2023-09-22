@@ -28,7 +28,7 @@ public class ExchangeRates {
 
     private double rate;
 
-    public ExchangeRatesDTO convertToExchangeRatesDTO(){
+    public ExchangeRatesDTO convertToExchangeRatesDTO() {
 
         ExchangeRatesDTO exchangeRatesDTO = new ExchangeRatesDTO();
         exchangeRatesDTO.setBaseCurrencyId(this.getBaseCurrencyId().convertToCurrencyDTO());

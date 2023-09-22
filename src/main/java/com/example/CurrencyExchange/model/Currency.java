@@ -5,7 +5,6 @@ import com.example.CurrencyExchange.dto.CurrencyDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -22,15 +21,12 @@ public class Currency {
     private int id;
 
     @NotNull
-    @Size(min = 3, max =3 , message = "Не соответствуйщая длина code")
     private String code;
 
     @NotNull
-    @Size(min =1 , max = 40, message = "Не соответствуйщая длина fullName")
     private String fullName;
 
     @NotNull
-    @Size(min = 1, max = 4, message = "Не соответствуйщая длина sign")
     private String sign;
 
 
@@ -43,7 +39,7 @@ public class Currency {
     private List<ExchangeRates> base;
 
 
-    public CurrencyDTO convertToCurrencyDTO(){
+    public CurrencyDTO convertToCurrencyDTO() {
 
         CurrencyDTO currencyDTO = new CurrencyDTO();
         currencyDTO.setCode(this.getCode());
@@ -52,7 +48,6 @@ public class Currency {
 
         return currencyDTO;
     }
-
 
 
 }

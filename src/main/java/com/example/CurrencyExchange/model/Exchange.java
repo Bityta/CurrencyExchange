@@ -1,21 +1,35 @@
 package com.example.CurrencyExchange.model;
 
-import com.example.CurrencyExchange.service.ExchangeRatesService;
+import com.example.CurrencyExchange.dto.CurrencyDTO;
+import lombok.*;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Exchange {
 
-    public final ExchangeRatesService exchangeRatesService;
+    private CurrencyDTO baseCurrencyId;
 
-    public String b;
+    private CurrencyDTO targetCurrencyId;
 
-    public String t;
+    private double rate;
 
-    public String rates;
+    private double amount;
+
+    public Exchange(Currency baseCurrencyId, Currency targetCurrencyId, double rate, double amount) {
+        this.baseCurrencyId = baseCurrencyId.convertToCurrencyDTO();
+        this.targetCurrencyId = targetCurrencyId.convertToCurrencyDTO();
+        this.rate = rate;
+        this.amount = amount;
+    }
+
+    private double convertedAmount;
 
 
-
-    public Exchange(ExchangeRatesService exchangeRatesService) {
-        this.exchangeRatesService = exchangeRatesService;
+    public void calculateConvertedAmount() {
+        this.convertedAmount = this.rate * this.amount;
     }
 
 

@@ -8,8 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
 public class ExchangeRatesDTO {
 
     private CurrencyDTO baseCurrencyId;
@@ -18,8 +18,8 @@ public class ExchangeRatesDTO {
 
     private double rate;
 
-    public ExchangeRates convertToExchangeRates(){
 
+    public ExchangeRates convertToExchangeRates() {
         ExchangeRates exchangeRates = new ExchangeRates();
         exchangeRates.setBaseCurrencyId(this.getBaseCurrencyId().convertToCurrency());
         exchangeRates.setTargetCurrencyId(this.getTargetCurrencyId().convertToCurrency());
@@ -28,13 +28,23 @@ public class ExchangeRatesDTO {
         return exchangeRates;
     }
 
-    public ExchangeRates convertToExchangeRates(int id){
+    public ExchangeRates convertToExchangeRates(int id) {
 
         ExchangeRates exchangeRates = new ExchangeRates();
         exchangeRates.setBaseCurrencyId(this.getBaseCurrencyId().convertToCurrency());
         exchangeRates.setTargetCurrencyId(this.getTargetCurrencyId().convertToCurrency());
         exchangeRates.setRate(this.getRate());
         exchangeRates.setId(id);
+
+        return exchangeRates;
+    }
+
+    public ExchangeRates convertToExchangeRates(Currency baseCurrency, Currency targetCurrency) {
+
+        ExchangeRates exchangeRates = new ExchangeRates();
+        exchangeRates.setBaseCurrencyId(baseCurrency);
+        exchangeRates.setTargetCurrencyId(targetCurrency);
+        exchangeRates.setRate(this.getRate());
 
         return exchangeRates;
     }
