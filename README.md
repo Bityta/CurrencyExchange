@@ -6,6 +6,7 @@ TODO:
 
 - docker
 - testing
+- change name commit
 
 ТЗ:
 
